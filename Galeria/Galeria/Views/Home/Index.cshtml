@@ -1,7 +1,41 @@
-﻿@{
-    ViewData["Title"] = "Início";
-}
-
-<div class="text-center">
-    <h1></h1>
-</div>
+﻿<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Página Inicial - Galeria</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Domine:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="text-center text-info m-5 font-domine" id="font-home">
+        <h2>Galeria Pessoal</h2>
+    </div>
+    <div class="d-flex flex-row justify-content-center align-content-around flex-wrap bg-info mb-4 rounded-top" id="div-home">
+        <div class="d-flex">
+            <img src="~/image/home-page.jpg" alt="Fotos" id="foto-home" />
+        </div>
+        <div class="text-white mt-3" id="text-home">
+            <h4>
+                Não perca as lembranças de momentos tão especiais!
+            </h4>
+            <h4>
+                Adicione novas fotos e faça o download a qualquer hora!
+            </h4>
+            <h4>
+                Cadastre-se agora e mantenha seus registros guardados
+                e seguros.
+            </h4>
+        </div>
+    </div>
+    <div class="m-0 text-center div-btn-home">
+        <a asp-area="Identity" asp-page="/Account/Register">
+            <input type="button" class="btn btn-info btn-home" value="Cadastrar" />
+        </a>
+        <a asp-area="Identity" asp-page="/Account/Login">
+            <input type="button" class="btn btn-info btn-home" value="Entrar" />
+        </a>
+    </div>
+</body>
+</html>

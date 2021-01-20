@@ -29,11 +29,6 @@ a {
 html {
   font-size: 14px;
 }
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
 
 .border-top {
   border-top: 1px solid #e5e5e5;
@@ -68,4 +63,67 @@ body {
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+}
+
+/**/
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+
+    #foto-home {
+        max-height: 35vh;
+        margin-right: 100px;
+    }
+
+    .btn-home {
+        width: 20%;
+    }
+
+    #text-home h4 {
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+
+    #text-home h4:nth-child(2) {
+        margin-left: 15px;
+    }
+    #text-home h4:nth-child(3) {
+        margin-left: 30px;
+    }
+}
+
+@media (max-width: 767px) {
+    html {
+        font-size: 16px;
+        width: 100vh;
+    }
+
+    #foto-home {
+        display: none;
+    }
+
+    .div-btn-home {
+        width: 100%;
+        margin: 0 auto !important;
+    }
+
+    .btn-home {
+        margin: 10px 0;
+        width: 60%;
+    }
+}
+
+.font-domine {
+    font-family: 'Domine', serif;
+}
+
+#div-home {
+    min-width: 100vh;
+    padding: 50px;
+}
+
+#font-home h2 {
+    font-size: 280%;
 }

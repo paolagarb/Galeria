@@ -20,7 +20,13 @@ namespace Galeria.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            if (User?.Identity.IsAuthenticated == false)
+            {
+                return View();
+            } else
+            {
+                return RedirectToAction("Index", "Albuns");
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
