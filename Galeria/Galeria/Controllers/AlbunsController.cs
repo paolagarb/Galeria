@@ -1,5 +1,6 @@
 ﻿using Galeria.Data;
 using Galeria.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Galeria.Controllers
 {
+    [Authorize]
     public class AlbunsController : Controller
     {
         private readonly ApplicationDbContext _context;
