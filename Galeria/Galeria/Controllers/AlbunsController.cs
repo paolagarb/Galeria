@@ -48,7 +48,7 @@ namespace Galeria.Controllers
         // GET: Albuns/Create
         public IActionResult Create()
         {
-            ViewData["IdentityUserId"] = new SelectList(_context.MyProperty, "Id", "Id");
+            ViewData["IdentityUserId"] = new SelectList(_context.Usuarios, "Id", "Id");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace Galeria.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.MyProperty, "Id", "Id", album.IdentityUserId);
+            ViewData["IdentityUserId"] = new SelectList(_context.Usuarios, "Id", "Id", album.IdentityUserId);
             return View(album);
         }
 
@@ -82,7 +82,7 @@ namespace Galeria.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.MyProperty, "Id", "Id", album.IdentityUserId);
+            ViewData["IdentityUserId"] = new SelectList(_context.Usuarios, "Id", "Id", album.IdentityUserId);
             return View(album);
         }
 
@@ -118,7 +118,7 @@ namespace Galeria.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.MyProperty, "Id", "Id", album.IdentityUserId);
+            ViewData["IdentityUserId"] = new SelectList(_context.Usuarios, "Id", "Id", album.IdentityUserId);
             return View(album);
         }
 
@@ -149,6 +149,28 @@ namespace Galeria.Controllers
             var album = await _context.Albuns.FindAsync(id);
             _context.Albuns.Remove(album);
             await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> NovoAlbum(string nome)
+        {
+            var usuario = User.Identity.Name;
+            var userId = (from user in _context.Usuarios
+                          where user.UserName == usuario
+                          select user.Id).Single();
+
+            if (!string.IsNullOrEmpty(nome))
+            {
+                Album album = new Album()
+                {
+                    Nome = nome,
+                    IdentityUserId = userId
+                };
+
+                _context.Albuns.Add(album);
+                await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction(nameof(Index));
         }
 

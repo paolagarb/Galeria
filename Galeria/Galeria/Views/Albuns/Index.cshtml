@@ -2,41 +2,14 @@
 
 @{  
     Layout = "_Layout";
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Álbuns";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdentityUser)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdentityUser.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<form asp-controller="Albuns" asp-action="NovoAlbum" method="post">
+    <div class="d-flex flex-row w-100 mt-3">
+        <input type="text" placeholder="Nome do álbum" class="w-75" name="nome" />
+        <input type="submit" value="Novo álbum" class="btn btn-primary w-25" />
+    </div>
+</form>
