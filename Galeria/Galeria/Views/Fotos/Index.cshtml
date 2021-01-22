@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Galeria.Models.Foto>
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Fotos";
+}
+<h1 class="mb-3">@ViewData["Title"]</h1>
+
+<div class="div-add-fotos">
+    <form enctype="multipart/form-data" asp-controller="Fotos" asp-action="Create" method="post">
+        <div class="d-flex flex-column w-100 flex-wrap">
+            <div class="d-flex div-fotos-input">
+                <input type="text" placeholder="Legenda" name="legenda" />
+                <input type="text" placeholder="Descrição" name="descricao" />
+                <select asp-items="ViewBag.Albuns" name="album"></select>
+                <input type="file" name="foto"/>  
+            </div>
+            <div class="d-flex div-input-capa">
+ @*min*@             <pre><input type="checkbox" value="true" name="capa" /> Capa</pre>        
+                <input type="submit" value="Adicionar Foto" class="btn btn-primary btn-foto text-center" />
+            <div></div>
+            </div>
+        </div>
+    </form>
+</div>
