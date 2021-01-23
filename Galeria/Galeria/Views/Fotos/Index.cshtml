@@ -30,7 +30,7 @@
     @foreach (var foto in fotos)
     {
         <div class="grid-item">
-            <a href="#">
+            <a asp-action="Details" asp-route-id="@foto">
                 <img src="/Fotos/Imagem/@foto" />
             </a>
         </div>

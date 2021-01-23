@@ -218,3 +218,8 @@ body {
 .grid {
     margin-top: 20px;
 }
+
+.grid-item img:hover {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
