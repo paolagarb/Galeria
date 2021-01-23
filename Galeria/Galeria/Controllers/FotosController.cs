@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,17 +23,24 @@ namespace Galeria.Controllers
         // GET: Fotos
         public async Task<IActionResult> Index()
         {
+            //Usuário atual
             var usuario = User.Identity.Name;
             var usuarioId = (from user in _context.Usuarios
                              where user.UserName == usuario
                              select user.Id).Single();
 
+            //Lista de álbuns para carregar em select list
             SelectList list = new SelectList(_context.Albuns
                                             .Where(c => c.IdentityUserId == usuarioId), "Id", "Nome");
             ViewBag.Albuns = list;
 
-            var applicationDbContext = _context.Fotos.Include(f => f.Album).Include(f => f.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            //lista de fotos do usuário atual
+            var fotos = (from c in _context.Fotos
+                         where c.IdentityUserId.Equals(usuarioId)
+                         select c.Id).ToList();
+            ViewBag.Id = fotos;
+
+            return View();
         }
 
         // GET: Fotos/Details/5
@@ -71,7 +77,25 @@ namespace Galeria.Controllers
                                  where user.UserName == usuario
                                  select user.Id).Single();
 
-                //IFormFile formFile = foto.FirstOrDefault();
+                //Se nova foto for capa, validar se ja havia outra foto definida 
+                //como capa no mesmo álbum para não dar conflito
+                if (capa == true)
+                {
+                    Foto fotoCapaAtual = (from c in _context.Fotos
+                                     join albuns in _context.Albuns
+                                     on c.AlbumId equals albuns.Id
+                                     where albuns.Id.Equals(album) &
+                                     c.Capa == true
+                                     select c).FirstOrDefault();
+
+                    if (fotoCapaAtual != null)
+                    {
+                        fotoCapaAtual.Capa = false;
+                        _context.Fotos.Update(fotoCapaAtual);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
                 if (foto != null)
                 {
                     MemoryStream memoryStream = new MemoryStream();
@@ -179,6 +203,26 @@ namespace Galeria.Controllers
             _context.Fotos.Remove(foto);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public FileStreamResult Imagem(int id)
+        {
+            var usuario = User.Identity.Name;
+            var usuarioId = (from user in _context.Usuarios
+                             where user.UserName == usuario
+                             select user.Id).Single();
+
+            var dados = (from c in _context.Fotos
+                         where c.Id.Equals(id)
+                         select c.Dados).FirstOrDefault();
+
+            var contentType = (from c in _context.Fotos
+                               where c.Id.Equals(id)
+                               select c.ContentType).FirstOrDefault();
+
+
+            MemoryStream memoryStream = new MemoryStream(dados);
+            return new FileStreamResult(memoryStream, contentType);
         }
 
         private bool FotoExists(int id)
