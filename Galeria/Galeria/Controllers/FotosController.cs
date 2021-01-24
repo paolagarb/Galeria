@@ -147,17 +147,24 @@ namespace Galeria.Controllers
                                 .Select(c => c.Legenda))
                                 .FirstOrDefault();
 
-            ViewBag.Album = from c in _context.Albuns
-                            where c.IdentityUser.UserName == user
-                            select new SelectListItem
-                            {
-                                Selected = (from x in _context.Albuns
-                                            join fotos in _context.Fotos
-                                            on x.Id equals fotos.AlbumId
-                                            select fotos.Id == id).FirstOrDefault(),
-                                Text = (c.Nome),
-                                Value = (c.Id.ToString())
-                            };
+            int albumAtualId = (from c in _context.Albuns
+                                join fotos in _context.Fotos
+                                on c.Id equals fotos.AlbumId
+                                where fotos.Id.Equals(id)
+                                select c.Id).FirstOrDefault();
+
+ /**/           ViewBag.Album = from c in _context.Albuns
+                                where c.IdentityUser.UserName == user
+                                select new SelectListItem
+                                {
+                                    Selected = (c.Id == albumAtualId),
+                                    //Selected = (from x in _context.Albuns
+                                    //            join fotos in _context.Fotos
+                                    //            on x.Id equals fotos.AlbumId
+                                    //            select x.Id == albumAtualId).FirstOrDefault(),
+                                    Text = (c.Nome),
+                                    Value = (c.Id.ToString())
+                                };
 
             ViewBag.Capa = (from c in _context.Fotos
                             where c.Id.Equals(id)
