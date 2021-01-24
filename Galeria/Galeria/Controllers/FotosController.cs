@@ -153,17 +153,13 @@ namespace Galeria.Controllers
                                 where fotos.Id.Equals(id)
                                 select c.Id).FirstOrDefault();
 
- /**/           ViewBag.Album = from c in _context.Albuns
+           ViewBag.Album = from c in _context.Albuns
                                 where c.IdentityUser.UserName == user
                                 select new SelectListItem
                                 {
                                     Selected = (c.Id == albumAtualId),
-                                    //Selected = (from x in _context.Albuns
-                                    //            join fotos in _context.Fotos
-                                    //            on x.Id equals fotos.AlbumId
-                                    //            select x.Id == albumAtualId).FirstOrDefault(),
                                     Text = (c.Nome),
-                                    Value = (c.Id.ToString())
+                                    Value = (c.Id.ToString()),
                                 };
 
             ViewBag.Capa = (from c in _context.Fotos

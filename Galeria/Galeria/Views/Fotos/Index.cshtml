@@ -9,13 +9,13 @@
 <h1 class="mb-3">@ViewData["Title"]</h1>
 
 <div class="div-add-fotos">
-    <form enctype="multipart/form-data" asp-controller="Fotos" asp-action="Create" method="post">
+    <form enctype="multipart/form-data" asp-controller="Fotos" asp-action="Create" method="post" class="min-vw-100" >
         <div class="d-flex flex-column w-100 flex-wrap">
             <div class="d-flex div-fotos-input">
                 <input type="text" placeholder="Legenda" name="legenda" />
                 <input type="text" placeholder="Descrição" name="descricao" />
                 <select asp-items="ViewBag.Albuns" name="album"></select>
-                <input type="file" name="foto" />
+                <input type="file" name="foto" class="add-file"/>
             </div>
             <div class="d-flex div-input-capa">
                 <pre><input type="checkbox" value="true" name="capa" id="capa" />Capa</pre>

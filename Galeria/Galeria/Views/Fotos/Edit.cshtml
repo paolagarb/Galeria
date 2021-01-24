@@ -26,7 +26,8 @@
             </div>
             <div>
                 <label class="control-label">Capa:</label>
-                <input type="checkbox" value="@ViewBag.Capa" name="capa" id="checkbox-capa"/>
+                <input type="checkbox" value="true" name="capa" checked="@ViewBag.Capa" />
+                <input name="capa" type="hidden" value="false">
             </div>
             <div>
                 <input type="submit" value="Alterar" class="btn btn-outline-primary mt-3" />

@@ -88,22 +88,26 @@ body {
         margin-bottom: 20px;
     }
 
-        #text-home h4:nth-child(2) {
-            margin-left: 15px;
-        }
+    #text-home h4:nth-child(2) {
+        margin-left: 15px;
+    }
 
-        #text-home h4:nth-child(3) {
-            margin-left: 30px;
-        }
+    #text-home h4:nth-child(3) {
+        margin-left: 30px;
+    }
 
     .div-add-fotos input {
-        width: 25%;
+        width: 14%;
         margin: 5px;
     }
 
     .div-add-fotos select {
-        width: 25%;
+        width: 12%;
         margin: 5px;
+    }
+
+    .add-file {
+        width: 18% !important;
     }
 
     .div-fotos-input {
@@ -194,9 +198,9 @@ body {
         margin: 0 auto;
     }
 
-        .grid-item img {
-            width: 100%;
-        }
+    .grid-item img {
+        width: 100%;
+    }
 
     .div-foto-detalhes img {
         max-width: 80vh;
@@ -206,14 +210,14 @@ body {
         width: 90vh;
     }
 
-        .div-detalhes-edit label {
-            width: 10%;
-        }
+    .div-detalhes-edit label {
+        width: 10%;
+    }
 
-        .div-detalhes-edit select, .div-detalhes-edit input {
-            width: 70%;
-            margin-left: 20px;
-        }
+    .div-detalhes-edit select, .div-detalhes-edit input {
+        width: 70%;
+        margin-left: 20px;
+    }
 }
 
 .font-domine {
