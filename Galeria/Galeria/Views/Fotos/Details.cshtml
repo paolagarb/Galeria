@@ -2,12 +2,12 @@
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "";
+    ViewData["Title"] = "Detalhes";
 }
 
 <div class="text-right">
     <a asp-action="Edit" class="btn btn-outline-primary" asp-route-id="@Model.Id">Alterar</a>
-    <a asp-action="Delet" class="btn btn-danger" asp-route-id="@Model.Id">Deletar</a>
+    <a asp-action="Delete" class="btn btn-danger" asp-route-id="@Model.Id">Deletar</a>
 </div>
 
 <div class="div-foto-detalhes mt-3">
@@ -22,11 +22,3 @@
         <a asp-action="Index">&larr; Voltar</a>
     </div>
 </div>
-
-
-
-
-@*<div>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
-        <a asp-action="Index">Voltar</a>
-    </div>*@

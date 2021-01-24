@@ -169,7 +169,6 @@ namespace Galeria.Controllers
             return View(foto);
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, string descricao, string legenda, int album, bool capa)
