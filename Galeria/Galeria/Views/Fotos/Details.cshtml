@@ -1,25 +1,32 @@
 ﻿@model Galeria.Models.Foto
 
-@{    
+@{
     Layout = "_Layout";
     ViewData["Title"] = "";
 }
-<h1 class="text-center m-3">@Model.Legenda</h1>
 
-<div class="div-foto-detalhes">
+<div class="text-right">
+    <a asp-action="Edit" class="btn btn-outline-primary" asp-route-id="@Model.Id">Alterar</a>
+    <a asp-action="Delet" class="btn btn-danger" asp-route-id="@Model.Id">Deletar</a>
+</div>
+
+<div class="div-foto-detalhes mt-3">
     <div>
         <img src="/Fotos/Imagem/@Model.Id" alt="Foto" />
     </div>
     <div>
         <a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-success mt-3 w-25">Download</a>
     </div>
-    
+
+    <div class="text-left btn-voltar">
+        <a asp-action="Index">&larr; Voltar</a>
+    </div>
 </div>
 
 
 
 
 @*<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
-    <a asp-action="Index">Voltar</a>
-</div>*@
+        <a asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
+        <a asp-action="Index">Voltar</a>
+    </div>*@

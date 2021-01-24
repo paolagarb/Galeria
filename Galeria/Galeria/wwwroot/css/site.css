@@ -132,6 +132,15 @@ body {
         max-width: 60vh;
         max-height: 50vh;
     }
+
+    .div-detalhes-edit select, .div-detalhes-edit input {
+        min-width: 200px;
+        min-height: 30px;
+    }
+
+    .div-detalhes-edit label {
+        min-width: 100px;
+    }
 }
 
 @media (max-width: 900px) {
@@ -181,17 +190,30 @@ body {
     }
 
     .grid-item {
-        width: 80vh; 
+        width: 80vh;
         margin: 0 auto;
     }
 
-    .grid-item img {
-        width: 100%;    
-    }
+        .grid-item img {
+            width: 100%;
+        }
 
     .div-foto-detalhes img {
         max-width: 80vh;
     }
+
+    .div-detalhes-edit {
+        width: 90vh;
+    }
+
+        .div-detalhes-edit label {
+            width: 10%;
+        }
+
+        .div-detalhes-edit select, .div-detalhes-edit input {
+            width: 70%;
+            margin-left: 20px;
+        }
 }
 
 .font-domine {
@@ -210,6 +232,7 @@ body {
 
 .div-add-fotos {
     max-width: 100vh;
+    min-width: 90vh;
 }
 
 .btn-foto {
@@ -236,4 +259,8 @@ body {
 .div-foto-detalhes  {
     text-align: center;
     margin-top: 40px;
+}
+
+.alterar-btn {
+    width: 50px;
 }

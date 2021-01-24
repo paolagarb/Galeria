@@ -51,10 +51,14 @@ namespace Galeria.Controllers
                 return NotFound();
             }
 
+            var user = User.Identity.Name;
+
             var foto = await _context.Fotos
                 .Include(f => f.Album)
                 .Include(f => f.IdentityUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+
             if (foto == null)
             {
                 return NotFound();
@@ -82,11 +86,11 @@ namespace Galeria.Controllers
                 if (capa == true)
                 {
                     Foto fotoCapaAtual = (from c in _context.Fotos
-                                     join albuns in _context.Albuns
-                                     on c.AlbumId equals albuns.Id
-                                     where albuns.Id.Equals(album) &
-                                     c.Capa == true
-                                     select c).FirstOrDefault();
+                                          join albuns in _context.Albuns
+                                          on c.AlbumId equals albuns.Id
+                                          where albuns.Id.Equals(album) &
+                                          c.Capa == true
+                                          select c).FirstOrDefault();
 
                     if (fotoCapaAtual != null)
                     {
@@ -127,51 +131,89 @@ namespace Galeria.Controllers
                 return NotFound();
             }
 
-            var foto = await _context.Fotos.FindAsync(id);
-            if (foto == null)
-            {
-                return NotFound();
-            }
-            ViewData["AlbumId"] = new SelectList(_context.Albuns, "Id", "Id", foto.AlbumId);
-            ViewData["IdentityUserId"] = new SelectList(_context.Usuarios, "Id", "Id", foto.IdentityUserId);
+            var user = User.Identity.Name;
+
+            var foto = (from c in _context.Fotos
+                        where c.Id.Equals(id)
+                        select c).FirstOrDefault();
+
+            ViewBag.Descricao = (_context.Fotos
+                                .Where(c => c.Id.Equals(id))
+                                .Select(c => c.Descricao))
+                                .FirstOrDefault();
+
+            ViewBag.Legenda = (_context.Fotos
+                                .Where(c => c.Id.Equals(id))
+                                .Select(c => c.Legenda))
+                                .FirstOrDefault();
+
+            ViewBag.Album = from c in _context.Albuns
+                            where c.IdentityUser.UserName == user
+                            select new SelectListItem
+                            {
+                                Selected = (from x in _context.Albuns
+                                            join fotos in _context.Fotos
+                                            on x.Id equals fotos.AlbumId
+                                            select fotos.Id == id).FirstOrDefault(),
+                                Text = (c.Nome),
+                                Value = (c.Id.ToString())
+                            };
+
+            ViewBag.Capa = (from c in _context.Fotos
+                            where c.Id.Equals(id)
+                            select c.Capa).FirstOrDefault();
+
             return View(foto);
         }
 
-        // POST: Fotos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao,Legenda,Dados,ContentType,Capa,AlbumId,IdentityUserId")] Foto foto)
+        public async Task<IActionResult> Edit(int id, string descricao, string legenda, int album, bool capa)
         {
-            if (id != foto.Id)
+            var foto = (from c in _context.Fotos
+                        where c.Id.Equals(id)
+                        select c).FirstOrDefault();
+
+            if (foto.Descricao != descricao)
             {
-                return NotFound();
+                foto.Descricao = descricao;
             }
 
-            if (ModelState.IsValid)
+            if (foto.Legenda != legenda)
             {
-                try
+                foto.Legenda = legenda;
+            }
+
+            if (foto.AlbumId != album)
+            {
+                foto.AlbumId = album;
+            }
+
+            if (foto.Capa != capa)
+            {
+                if (capa == true)
                 {
-                    _context.Update(foto);
+                    var capaAtual = (from c in _context.Fotos
+                                     where c.AlbumId == album &
+                                     c.Capa == true
+                                     select c).FirstOrDefault();
+                    if (capaAtual != null)
+                    {
+                        capaAtual.Capa = false;
+                    }
+
+                    _context.Fotos.Update(capaAtual);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FotoExists(foto.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+
+                foto.Capa = capa;
             }
-            ViewData["AlbumId"] = new SelectList(_context.Albuns, "Id", "Id", foto.AlbumId);
-            ViewData["IdentityUserId"] = new SelectList(_context.Usuarios, "Id", "Id", foto.IdentityUserId);
-            return View(foto);
+
+            _context.Fotos.Update(foto);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Fotos/Delete/5
@@ -224,18 +266,18 @@ namespace Galeria.Controllers
             return new FileStreamResult(memoryStream, contentType);
         }
 
-        public FileResult Download (int id)
+        public FileResult Download(int id)
         {
             var dados = (from c in _context.Fotos
                          where c.Id.Equals(id)
                          select c.Dados).FirstOrDefault();
 
             var contentType = (from c in _context.Fotos
-                         where c.Id.Equals(id)
-                         select c.ContentType).FirstOrDefault();
+                               where c.Id.Equals(id)
+                               select c.ContentType).FirstOrDefault();
 
             string extensao = Path.GetFileNameWithoutExtension(contentType);
-            return File(dados, contentType, "image."+extensao);
+            return File(dados, contentType, "image." + extensao);
         }
 
         private bool FotoExists(int id)
