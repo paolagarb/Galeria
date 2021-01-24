@@ -220,9 +220,22 @@ namespace Galeria.Controllers
                                where c.Id.Equals(id)
                                select c.ContentType).FirstOrDefault();
 
-
             MemoryStream memoryStream = new MemoryStream(dados);
             return new FileStreamResult(memoryStream, contentType);
+        }
+
+        public FileResult Download (int id)
+        {
+            var dados = (from c in _context.Fotos
+                         where c.Id.Equals(id)
+                         select c.Dados).FirstOrDefault();
+
+            var contentType = (from c in _context.Fotos
+                         where c.Id.Equals(id)
+                         select c.ContentType).FirstOrDefault();
+
+            string extensao = Path.GetFileNameWithoutExtension(contentType);
+            return File(dados, contentType, "image."+extensao);
         }
 
         private bool FotoExists(int id)

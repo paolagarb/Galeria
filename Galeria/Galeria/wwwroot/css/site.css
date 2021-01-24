@@ -127,6 +127,11 @@ body {
         width: 100%;
         padding: 5px;
     }
+
+    .div-foto-detalhes img {
+        max-width: 60vh;
+        max-height: 50vh;
+    }
 }
 
 @media (max-width: 900px) {
@@ -183,6 +188,10 @@ body {
     .grid-item img {
         width: 100%;    
     }
+
+    .div-foto-detalhes img {
+        max-width: 80vh;
+    }
 }
 
 .font-domine {
@@ -222,4 +231,9 @@ body {
 .grid-item img:hover {
     -webkit-transform: scale(1.05);
     transform: scale(1.05);
+}
+
+.div-foto-detalhes  {
+    text-align: center;
+    margin-top: 40px;
 }

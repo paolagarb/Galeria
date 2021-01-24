@@ -4,12 +4,22 @@
     Layout = "_Layout";
     ViewData["Title"] = "";
 }
+<h1 class="text-center m-3">@Model.Legenda</h1>
+
+<div class="div-foto-detalhes">
+    <div>
+        <img src="/Fotos/Imagem/@Model.Id" alt="Foto" />
+    </div>
+    <div>
+        <a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-success mt-3 w-25">Download</a>
+    </div>
+    
+</div>
 
 
 
 
-
-<div>
+@*<div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Editar</a> |
     <a asp-action="Index">Voltar</a>
-</div>
+</div>*@
