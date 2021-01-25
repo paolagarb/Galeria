@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -22,8 +24,34 @@ namespace Galeria.Controllers
         // GET: Albuns
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Albuns.Include(a => a.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            var user = User.Identity.Name;
+
+            var albuns = (from c in _context.Albuns
+                          where c.IdentityUser.UserName == user
+                          select c).ToList();
+
+            List<Album> albumList = new List<Album>();
+            List<bool> fotosList = new List<bool>();
+
+            foreach (var album in albuns)
+            {
+                albumList.Add(album);
+
+                var foto = FotoCapa(album.Id);
+
+                if (foto == null)
+                {
+                    fotosList.Add(false);
+                } else
+                {
+                    fotosList.Add(true);
+                }
+            }
+
+            ViewBag.Album = albumList;
+            ViewBag.Fotos = fotosList;
+
+            return View();
         }
 
         // GET: Albuns/Details/5
@@ -172,6 +200,67 @@ namespace Galeria.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public FileStreamResult FotoCapa(int id)
+        {
+            var user = User.Identity.Name;
+            byte[] dados;
+            string contentType;
+
+
+            var fotoCapaId = (from c in _context.Albuns
+                              join foto in _context.Fotos
+                              on c.Id equals foto.AlbumId
+                              where c.Id.Equals(id)
+                              & foto.Capa == true
+                              select foto.Id).FirstOrDefault();
+          
+            if (fotoCapaId != 0)
+            {
+                dados = (from c in _context.Fotos
+                             join album in _context.Albuns
+                             on c.AlbumId equals album.Id
+                             where c.Id.Equals(fotoCapaId)
+                             select c.Dados).FirstOrDefault();
+
+                contentType = (from c in _context.Fotos
+                                   join album in _context.Albuns
+                                   on c.AlbumId equals album.Id
+                                   where c.Id.Equals(fotoCapaId)
+                                   select c.ContentType).FirstOrDefault();
+            } else
+            {
+                //Caso não tenha uma foto definida como capa:
+                var fotoId = (from c in _context.Albuns
+                              join foto in _context.Fotos
+                              on c.Id equals foto.AlbumId
+                              where c.Id.Equals(id)
+                              select foto.Id).FirstOrDefault();
+
+                if (fotoId != 0)
+                {
+                    dados = (from c in _context.Fotos
+                             join album in _context.Albuns
+                             on c.AlbumId equals album.Id
+                             where c.Id.Equals(fotoId)
+                             select c.Dados).FirstOrDefault();
+
+                    contentType = (from c in _context.Fotos
+                                   join album in _context.Albuns
+                                   on c.AlbumId equals album.Id
+                                   where c.Id.Equals(fotoId)
+                                   select c.ContentType).FirstOrDefault();
+                }
+                //Se o álbum não possuir fotos:
+                else
+                {
+                    return null;
+                }
+            }
+
+            MemoryStream memoryStream = new MemoryStream(dados);
+            return new FileStreamResult(memoryStream, contentType);
         }
 
         private bool AlbumExists(int id)

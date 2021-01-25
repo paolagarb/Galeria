@@ -145,6 +145,7 @@ body {
     .div-detalhes-edit label {
         min-width: 100px;
     }
+
 }
 
 @media (max-width: 900px) {
@@ -260,7 +261,12 @@ body {
     transform: scale(1.05);
 }
 
-.div-foto-detalhes  {
+.div-album:hover {
+    -webkit-transform: scale(1.05);
+    transform: scale(1.05);
+}
+
+.div-foto-detalhes {
     text-align: center;
     margin-top: 40px;
 }
@@ -268,3 +274,18 @@ body {
 .alterar-btn {
     width: 50px;
 }
+
+.div-album {
+    border: 1px solid #b8daff;
+    max-width: 75%;
+    height: 200px;
+    background-color: #7abaff;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 14px;
+}
+
+    .div-album img {
+        max-width: 100%;
+        max-height: 100%;
+    }
