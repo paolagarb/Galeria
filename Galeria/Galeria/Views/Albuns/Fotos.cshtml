@@ -1,0 +1,17 @@
+﻿@{ 
+    Layout = "_Layout";
+    ViewData["Title"] = "Álbum";
+}
+
+<h1 class="mt-3">@ViewBag.AlbumNome</h1>
+
+<div class="grid mt-3" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": 200 }'>
+    @foreach (var foto in ViewBag.FotosId)
+    {
+        <div class="grid-item">
+            <a asp-action="Details" asp-controller="Fotos" asp-route-id="@foto">
+                <img src="/Fotos/Imagem/@foto" alt="Foto" />
+            </a>
+        </div>
+    }
+</div>

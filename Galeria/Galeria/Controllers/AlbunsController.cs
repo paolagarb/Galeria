@@ -73,30 +73,6 @@ namespace Galeria.Controllers
             return View(album);
         }
 
-        // GET: Albuns/Create
-        public IActionResult Create()
-        {
-            ViewData["IdentityUserId"] = new SelectList(_context.Usuarios, "Id", "Id");
-            return View();
-        }
-
-        // POST: Albuns/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,IdentityUserId")] Album album)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(album);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdentityUserId"] = new SelectList(_context.Usuarios, "Id", "Id", album.IdentityUserId);
-            return View(album);
-        }
-
         // GET: Albuns/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -261,6 +237,21 @@ namespace Galeria.Controllers
 
             MemoryStream memoryStream = new MemoryStream(dados);
             return new FileStreamResult(memoryStream, contentType);
+        }
+
+        public async Task<IActionResult> Fotos(int id)
+        {
+            ViewBag.FotosId = (from c in _context.Albuns
+                           join fotos in _context.Fotos
+                           on c.Id equals fotos.AlbumId
+                           where c.Id.Equals(id)
+                           select fotos.Id).ToList();
+
+            ViewBag.AlbumNome = (from c in _context.Albuns
+                                 where c.Id.Equals(id)
+                                 select c.Nome).FirstOrDefault();
+
+            return View();
         }
 
         private bool AlbumExists(int id)
