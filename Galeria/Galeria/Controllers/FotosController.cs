@@ -20,6 +20,7 @@ namespace Galeria.Controllers
             _context = context;
         }
 
+        [Route("fotos")]
         // GET: Fotos
         public async Task<IActionResult> Index()
         {
@@ -43,6 +44,7 @@ namespace Galeria.Controllers
             return View();
         }
 
+        [Route("fotos/detalhes")]
         // GET: Fotos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -67,6 +69,7 @@ namespace Galeria.Controllers
             return View(foto);
         }
 
+        [Route("fotos/nova")]
         // POST: Fotos/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -123,6 +126,7 @@ namespace Galeria.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Route("fotos/editar")]
         // GET: Fotos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -169,6 +173,7 @@ namespace Galeria.Controllers
             return View(foto);
         }
 
+        [Route("fotos/editar")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, string descricao, string legenda, int album, bool capa)
@@ -219,6 +224,7 @@ namespace Galeria.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Route("fotos/deletar")]
         // GET: Fotos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -239,6 +245,7 @@ namespace Galeria.Controllers
             return View(foto);
         }
 
+        [Route("fotos/deletar")]
         // POST: Fotos/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

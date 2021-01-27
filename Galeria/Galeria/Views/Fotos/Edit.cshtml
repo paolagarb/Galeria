@@ -36,10 +36,11 @@
     </form>
 </div>
 
-    <div>
-        <a asp-action="Index">&larr; Voltar</a>
-    </div>
+<div class="back">
+    <a asp-action="Index">&larr; Todas as fotos</a>
+</div>
 
-    @section Scripts {
-        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    }
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

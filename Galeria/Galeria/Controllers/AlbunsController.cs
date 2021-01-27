@@ -21,6 +21,7 @@ namespace Galeria.Controllers
             _context = context;
         }
 
+        [Route("albuns")]
         // GET: Albuns
         public async Task<IActionResult> Index()
         {
@@ -54,6 +55,7 @@ namespace Galeria.Controllers
             return View();
         }
 
+        [Route("albuns/detalhes")]
         // GET: Albuns/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -73,6 +75,7 @@ namespace Galeria.Controllers
             return View(album);
         }
 
+        [Route("albuns/editar")]
         // GET: Albuns/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -89,6 +92,7 @@ namespace Galeria.Controllers
             return View(album);
         }
 
+        [Route("albuns/editar")]
         // POST: Albuns/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -125,6 +129,7 @@ namespace Galeria.Controllers
             return View(album);
         }
 
+        [Route("albuns/deletar")]
         // GET: Albuns/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -144,6 +149,7 @@ namespace Galeria.Controllers
             return View(album);
         }
 
+        [Route("albuns/deletar")]
         // POST: Albuns/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -166,6 +172,7 @@ namespace Galeria.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Route("albuns/adicionar")]
         public async Task<IActionResult> NovoAlbum(string nome)
         {
             var usuario = User.Identity.Name;
@@ -249,21 +256,22 @@ namespace Galeria.Controllers
             return new FileStreamResult(memoryStream, contentType);
         }
 
+        [Route("albuns/fotos/{id}")]
         public async Task<IActionResult> Fotos(int id)
         {
-            ViewBag.FotosId = (from c in _context.Albuns
+            ViewBag.FotosId = await (from c in _context.Albuns
                            join fotos in _context.Fotos
                            on c.Id equals fotos.AlbumId
                            where c.Id.Equals(id)
-                           select fotos.Id).ToList();
+                           select fotos.Id).ToListAsync();
 
-            ViewBag.AlbumNome = (from c in _context.Albuns
+            ViewBag.AlbumNome = await (from c in _context.Albuns
                                  where c.Id.Equals(id)
-                                 select c.Nome).FirstOrDefault();
+                                 select c.Nome).FirstOrDefaultAsync();
 
-            ViewBag.AlbumId = (from c in _context.Albuns
+            ViewBag.AlbumId = await (from c in _context.Albuns
                                where c.Id.Equals(id)
-                               select c.Id).FirstOrDefault();
+                               select c.Id).FirstOrDefaultAsync();
 
             return View();
         }
