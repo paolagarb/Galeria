@@ -59,7 +59,7 @@ namespace Galeria.Controllers
         {
             if (id == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao carregar detalhaes da foto" });
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao carregar detalhes da foto" });
             }
 
             var user = User.Identity.Name;
@@ -71,7 +71,7 @@ namespace Galeria.Controllers
 
             if (foto == null)
             {
-                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao carregar detalhaes da foto" });
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao carregar detalhes da foto" });
             }
 
             return View(foto);
