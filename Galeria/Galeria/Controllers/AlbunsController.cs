@@ -86,7 +86,6 @@ namespace Galeria.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdentityUserId"] = new SelectList(_context.Usuarios, "Id", "Id", album.IdentityUserId);
             return View(album);
         }
 
@@ -150,6 +149,17 @@ namespace Galeria.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var fotos = (from c in _context.Fotos
+                         join albuns in _context.Albuns
+                         on c.AlbumId equals albuns.Id
+                         where albuns.Id.Equals(id)
+                         select c).ToList();
+            foreach (var foto in fotos)
+            {
+                _context.Fotos.Remove(foto);
+                await _context.SaveChangesAsync();
+            }
+
             var album = await _context.Albuns.FindAsync(id);
             _context.Albuns.Remove(album);
             await _context.SaveChangesAsync();
@@ -250,6 +260,10 @@ namespace Galeria.Controllers
             ViewBag.AlbumNome = (from c in _context.Albuns
                                  where c.Id.Equals(id)
                                  select c.Nome).FirstOrDefault();
+
+            ViewBag.AlbumId = (from c in _context.Albuns
+                               where c.Id.Equals(id)
+                               select c.Id).FirstOrDefault();
 
             return View();
         }
