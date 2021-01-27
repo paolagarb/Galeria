@@ -203,10 +203,11 @@ namespace Galeria.Controllers
                     if (capaAtual != null)
                     {
                         capaAtual.Capa = false;
+                        _context.Fotos.Update(capaAtual);
+                        await _context.SaveChangesAsync();
                     }
 
-                    _context.Fotos.Update(capaAtual);
-                    await _context.SaveChangesAsync();
+                    foto.Capa = true;
                 }
 
                 foto.Capa = capa;
