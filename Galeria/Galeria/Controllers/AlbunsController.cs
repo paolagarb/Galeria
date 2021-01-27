@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,53 +29,42 @@ namespace Galeria.Controllers
         {
             var user = User.Identity.Name;
 
-            var albuns = (from c in _context.Albuns
-                          where c.IdentityUser.UserName == user
-                          select c).ToList();
-
-            List<Album> albumList = new List<Album>();
-            List<bool> fotosList = new List<bool>();
-
-            foreach (var album in albuns)
+            try
             {
-                albumList.Add(album);
+                var albuns = (from c in _context.Albuns
+                              where c.IdentityUser.UserName == user
+                              select c).ToList();
 
-                var foto = FotoCapa(album.Id);
+                List<Album> albumList = new List<Album>();
+                List<bool> fotosList = new List<bool>();
 
-                if (foto == null)
+                foreach (var album in albuns)
                 {
-                    fotosList.Add(false);
-                } else
-                {
-                    fotosList.Add(true);
+                    albumList.Add(album);
+
+                    var foto = FotoCapa(album.Id);
+
+                    if (foto == null)
+                    {
+                        fotosList.Add(false);
+                    }
+                    else
+                    {
+                        fotosList.Add(true);
+                    }
                 }
+
+                ViewBag.Album = albumList;
+                ViewBag.Fotos = fotosList;
+
+                return View();
             }
-
-            ViewBag.Album = albumList;
-            ViewBag.Fotos = fotosList;
-
-            return View();
+            catch (Exception)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao exibir os álbuns" });
+            }
         }
 
-        [Route("albuns/detalhes")]
-        // GET: Albuns/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var album = await _context.Albuns
-                .Include(a => a.IdentityUser)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (album == null)
-            {
-                return NotFound();
-            }
-
-            return View(album);
-        }
 
         [Route("albuns/editar")]
         // GET: Albuns/Edit/5
@@ -81,13 +72,13 @@ namespace Galeria.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao alterar o álbum" });
             }
 
             var album = await _context.Albuns.FindAsync(id);
             if (album == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao alterar o álbum" });
             }
             return View(album);
         }
@@ -102,7 +93,7 @@ namespace Galeria.Controllers
         {
             if (id != album.Id)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao alterar o álbum" });
             }
 
             if (ModelState.IsValid)
@@ -116,7 +107,7 @@ namespace Galeria.Controllers
                 {
                     if (!AlbumExists(album.Id))
                     {
-                        return NotFound();
+                        return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao alterar o álbum" });
                     }
                     else
                     {
@@ -135,7 +126,7 @@ namespace Galeria.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao deletar o álbum" });
             }
 
             var album = await _context.Albuns
@@ -143,7 +134,7 @@ namespace Galeria.Controllers
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (album == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao deletar o álbum" });
             }
 
             return View(album);
@@ -155,44 +146,58 @@ namespace Galeria.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var fotos = (from c in _context.Fotos
-                         join albuns in _context.Albuns
-                         on c.AlbumId equals albuns.Id
-                         where albuns.Id.Equals(id)
-                         select c).ToList();
-            foreach (var foto in fotos)
+            try
             {
-                _context.Fotos.Remove(foto);
-                await _context.SaveChangesAsync();
-            }
+                var fotos = (from c in _context.Fotos
+                             join albuns in _context.Albuns
+                             on c.AlbumId equals albuns.Id
+                             where albuns.Id.Equals(id)
+                             select c).ToList();
+                foreach (var foto in fotos)
+                {
+                    _context.Fotos.Remove(foto);
+                    await _context.SaveChangesAsync();
+                }
 
-            var album = await _context.Albuns.FindAsync(id);
-            _context.Albuns.Remove(album);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                var album = await _context.Albuns.FindAsync(id);
+                _context.Albuns.Remove(album);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao deletar o álbum" });
+            }
         }
 
         [Route("albuns/adicionar")]
         public async Task<IActionResult> NovoAlbum(string nome)
         {
-            var usuario = User.Identity.Name;
-            var userId = (from user in _context.Usuarios
-                          where user.UserName == usuario
-                          select user.Id).Single();
-
-            if (!string.IsNullOrEmpty(nome))
+            try
             {
-                Album album = new Album()
+                var usuario = User.Identity.Name;
+                var userId = (from user in _context.Usuarios
+                              where user.UserName == usuario
+                              select user.Id).Single();
+
+                if (!string.IsNullOrEmpty(nome))
                 {
-                    Nome = nome,
-                    IdentityUserId = userId
-                };
+                    Album album = new Album()
+                    {
+                        Nome = nome,
+                        IdentityUserId = userId
+                    };
 
-                _context.Albuns.Add(album);
-                await _context.SaveChangesAsync();
+                    _context.Albuns.Add(album);
+                    await _context.SaveChangesAsync();
+                }
+
+                return RedirectToAction(nameof(Index));
             }
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao criar um novo álbum" });
+            }
         }
 
         public FileStreamResult FotoCapa(int id)
@@ -208,21 +213,22 @@ namespace Galeria.Controllers
                               where c.Id.Equals(id)
                               & foto.Capa == true
                               select foto.Id).FirstOrDefault();
-          
+
             if (fotoCapaId != 0)
             {
                 dados = (from c in _context.Fotos
-                             join album in _context.Albuns
-                             on c.AlbumId equals album.Id
-                             where c.Id.Equals(fotoCapaId)
-                             select c.Dados).FirstOrDefault();
+                         join album in _context.Albuns
+                         on c.AlbumId equals album.Id
+                         where c.Id.Equals(fotoCapaId)
+                         select c.Dados).FirstOrDefault();
 
                 contentType = (from c in _context.Fotos
-                                   join album in _context.Albuns
-                                   on c.AlbumId equals album.Id
-                                   where c.Id.Equals(fotoCapaId)
-                                   select c.ContentType).FirstOrDefault();
-            } else
+                               join album in _context.Albuns
+                               on c.AlbumId equals album.Id
+                               where c.Id.Equals(fotoCapaId)
+                               select c.ContentType).FirstOrDefault();
+            }
+            else
             {
                 //Caso não tenha uma foto definida como capa:
                 var fotoId = (from c in _context.Albuns
@@ -259,26 +265,43 @@ namespace Galeria.Controllers
         [Route("albuns/fotos/{id}")]
         public async Task<IActionResult> Fotos(int id)
         {
-            ViewBag.FotosId = await (from c in _context.Albuns
-                           join fotos in _context.Fotos
-                           on c.Id equals fotos.AlbumId
-                           where c.Id.Equals(id)
-                           select fotos.Id).ToListAsync();
+            try
+            {
+                ViewBag.FotosId = await (from c in _context.Albuns
+                                         join fotos in _context.Fotos
+                                         on c.Id equals fotos.AlbumId
+                                         where c.Id.Equals(id)
+                                         select fotos.Id).ToListAsync();
 
-            ViewBag.AlbumNome = await (from c in _context.Albuns
-                                 where c.Id.Equals(id)
-                                 select c.Nome).FirstOrDefaultAsync();
+                ViewBag.AlbumNome = await (from c in _context.Albuns
+                                           where c.Id.Equals(id)
+                                           select c.Nome).FirstOrDefaultAsync();
 
-            ViewBag.AlbumId = await (from c in _context.Albuns
-                               where c.Id.Equals(id)
-                               select c.Id).FirstOrDefaultAsync();
+                ViewBag.AlbumId = await (from c in _context.Albuns
+                                         where c.Id.Equals(id)
+                                         select c.Id).FirstOrDefaultAsync();
 
-            return View();
+                return View();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction(nameof(Error), new { message = "Ocorreu um erro ao carregar o álbum" });
+            }
         }
 
         private bool AlbumExists(int id)
         {
             return _context.Albuns.Any(e => e.Id == id);
+        }
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
         }
     }
 }
