@@ -8,7 +8,9 @@
 
 </div>
 
-## Tecnologias
+<details>
+<summary><strong>Tecnologias</strong></summary>
+
 
 * Front-end: HTML5, CSS3, Bootstrap, JavaScript
 
@@ -16,7 +18,11 @@
 
 *  Banco de Dados: SQL 
 
-## Projeto
+</details>
+
+<details>
+<summary><strong>Projeto</strong></summary>
+
 
 :white_check_mark: Criar/deletar álbuns
 
@@ -32,7 +38,11 @@
 
 :white_check_mark: Deletar álbum e todas as fotos que o pertencem
 
-## :sunrise_over_mountains: Imagens
+</details>
+
+<details>
+<summary><strong>:sunrise_over_mountains: Imagens</strong></summary>
+  
 
 | Tela Inicial | Cadastro |
 | --- | --- | 
@@ -72,3 +82,5 @@
 | Adicionando novas fotos |
 | --- |
 | ![15](https://user-images.githubusercontent.com/69488783/106172991-321f2500-6172-11eb-8ada-857600e98b32.png) |
+
+</details>
